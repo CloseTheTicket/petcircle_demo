@@ -33,5 +33,5 @@ Note: Another alternative would be to import Postman collection (.json) files an
 
 
 Related links:
-https://petstore.swagger.io/#/
-https://learning.postman.com/docs/introduction/overview/
+- https://petstore.swagger.io/#/
+- https://learning.postman.com/docs/introduction/overview/
