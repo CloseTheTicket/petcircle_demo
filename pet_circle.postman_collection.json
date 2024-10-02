@@ -1,0 +1,1458 @@
+{
+	"info": {
+		"_postman_id": "7a185845-4e41-4359-9ac6-64ee1a27ce28",
+		"name": "Pet Circle",
+		"description": "[https://petstore.swagger.io/#/](https://petstore.swagger.io/#/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1675689"
+	},
+	"item": [
+		{
+			"name": "Unauthorized create PET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Authorization header should exist on response\", function () {",
+							"    pm.response.to.have.header(\"Authorization\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"category\": {\n        \"id\": 0,\n        \"name\": \"{{random}}\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create PET field validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"pet id value is expected\", function () {",
+							"    var pet_id = jsonData.id",
+							"    pm.expect(pet_id).to.be.a('number')",
+							"    pm.expect(jsonData.id).to.eql(pet_id);",
+							"});",
+							"",
+							"pm.test(\"category id is expected\", function () {",
+							"    var category_id = jsonData.category.id",
+							"    pm.expect(category_id).to.be.a('number')",
+							"    pm.expect(jsonData.category.id).to.eql(category_id);",
+							"});",
+							"",
+							"pm.test(\"category value is expected\", function () {",
+							"    var category_value = jsonData.category.name",
+							"    pm.expect(category_value).to.be.a('string')",
+							"    pm.expect(jsonData.category.name).to.eql(category_value);",
+							"});",
+							"",
+							"pm.test(\"pet name is expected\", function () {",
+							"    var pet_name = jsonData.name",
+							"    pm.expect(pet_name).to.be.a('string')",
+							"    pm.expect(jsonData.name).to.eql(pet_name);",
+							"});",
+							"",
+							"pm.test(\"pet image is expected\", function () {",
+							"    var pet_image_url = jsonData.photoUrls",
+							"    pm.expect(jsonData.photoUrls).to.eql(pet_image_url);",
+							"});",
+							"",
+							"pm.test(\"photoUrls values are valid URLs\", function () {",
+							"    var pet_image_urls = jsonData.photoUrls",
+							"    var regex_url = new RegExp(/^(https?):\\/\\/([^\\s$.?#].[^\\s]*)$/i);",
+							"    pet_image_urls.forEach(function(url) {",
+							"        pm.expect(regex_url.test(url)).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tag id is expected\", function () {",
+							"    var tag_id = jsonData.tags[0].id",
+							"    pm.expect(jsonData.tags[0].id).to.eql(tag_id);",
+							"    pm.expect(tag_id).to.be.a('number')",
+							"});",
+							"",
+							"pm.test(\"status should either be: available, pending, sold\", function () {",
+							"    var status_value = jsonData.status",
+							"    pm.expect(status_value).to.be.a('string')",
+							"    pm.expect(status_value).to.be.oneOf(['available', 'pending','sold']);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 0,\n    \"category\": {\n        \"id\": \"{{$randomInt}}\",\n        \"name\": \"{{$randomFirstName}}\"\n    },\n    \"name\": \"{{$randomFirstName}}\",\n    \"photoUrls\": [\n        \"{{$randomCatsImage}}\"\n    ],\n    \"tags\": [\n        {\n            \"id\": {{$randomInt}},\n            \"name\": \"{{$randomAdjective}}\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create PET array validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"pet id value is expected\", function () {",
+							"    var pet_id = jsonData.id",
+							"    pm.expect(pet_id).to.be.a('number')",
+							"    pm.expect(jsonData.id).to.eql(pet_id);",
+							"});",
+							"",
+							"pm.test(\"category id is expected\", function () {",
+							"    var category_id = jsonData.category.id",
+							"    pm.expect(category_id).to.be.a('number')",
+							"    pm.expect(jsonData.category.id).to.eql(category_id);",
+							"});",
+							"",
+							"pm.test(\"category value is expected\", function () {",
+							"    var category_value = jsonData.category.name",
+							"    pm.expect(category_value).to.be.a('string')",
+							"    pm.expect(jsonData.category.name).to.eql(category_value);",
+							"});",
+							"",
+							"pm.test(\"pet name is expected\", function () {",
+							"    var pet_name = jsonData.name",
+							"    pm.expect(pet_name).to.be.a('string')",
+							"    pm.expect(jsonData.name).to.eql(pet_name);",
+							"});",
+							"",
+							"pm.test(\"pet image is expected\", function () {",
+							"    var pet_image_url = jsonData.photoUrls",
+							"    pm.expect(jsonData.photoUrls).to.eql(pet_image_url);",
+							"});",
+							"",
+							"pm.test(\"photoUrls values are valid URLs\", function () {",
+							"    var pet_image_urls = jsonData.photoUrls",
+							"    var regex_url = new RegExp(/^(https?):\\/\\/([^\\s$.?#].[^\\s]*)$/i);",
+							"    pet_image_urls.forEach(function(url) {",
+							"        pm.expect(regex_url.test(url)).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tag id is expected\", function () {",
+							"    var tag_id = jsonData.tags[0].id",
+							"    pm.expect(jsonData.tags[0].id).to.eql(tag_id);",
+							"    pm.expect(tag_id).to.be.a('number')",
+							"});",
+							"",
+							"pm.test(\"status should either be: available, pending, sold\", function () {",
+							"    var status_value = jsonData.status",
+							"    pm.expect(status_value).to.be.a('string')",
+							"    pm.expect(status_value).to.be.oneOf(['available', 'pending','sold']);",
+							"});",
+							"",
+							"",
+							"pm.test(\"All photoUrls are expected\", function () {",
+							"    var photoUrls_array = jsonData.photoUrls; ",
+							"    pm.expect(photoUrls_array).to.be.an('array').that.is.not.empty;",
+							"",
+							"    var photoUrls_1 = photoUrls_array[0];",
+							"    var photoUrls_2 = photoUrls_array[1];",
+							"    var expectedPhotoURLs = [photoUrls_1, photoUrls_2];",
+							"",
+							"    photoUrls_array.forEach(function(url, index) { ",
+							"        pm.expect(url).to.eql(expectedPhotoURLs[index]);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"All tag names are expected\", function () {",
+							"    var tags = jsonData.tags; ",
+							"    pm.expect(tags).to.be.an('array').that.is.not.empty;",
+							"",
+							"    var tag_name_1 = tags[0].name;",
+							"    var tag_name_2 = tags[1].name;",
+							"    var expectedTagNames = [tag_name_1, tag_name_2];",
+							"",
+							"    tags.forEach(function(tag, index) {",
+							"        pm.expect(tag.name).to.eql(expectedTagNames[index]);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category\": {\n        \"id\": {{$randomInt}},\n        \"name\": \"{{$randomColor}}\"\n    },\n    \"name\": \"{{$randomFirstName}}\",\n    \"photoUrls\": [\n        \"{{$randomCatsImage}}\",\n        \"{{$randomCatsImage}}\"\n    ],\n    \"tags\": [\n        {\n            \"id\": {{$randomInt}},\n            \"name\": \"{{$randomAdjective}}\"\n        },\n                {\n            \"id\": {{$randomInt}},\n            \"name\": \"{{$randomAdjective}}\"\n        }\n    ],\n    \"status\": \"asdf\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create PET field missing values validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"category id value exists\", function () {",
+							"    var category_id = jsonData.category.id;",
+							"    pm.expect(category_id).to.be.a('number').and.not.equal(0);",
+							"});",
+							"",
+							"pm.test(\"category name value exists\", function () {",
+							"    var category_name = jsonData.category.name;",
+							"    pm.expect(category_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"pet name value exists\", function () {",
+							"    var pet_name = jsonData.name;",
+							"    pm.expect(pet_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"photoUrls value exists\", function () {",
+							"    var pet_image_url = jsonData.photoUrls;",
+							"    pm.expect(pet_image_url).to.be.an('array').that.is.not.empty;",
+							"    ",
+							"    pet_image_url.forEach(function(url) {",
+							"        pm.expect(url).to.not.be.empty; // no empty strings in photoUrls",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tags id value exists\", function () {",
+							"    var tags_id = jsonData.tags[0].id;",
+							"    pm.expect(tags_id).to.be.a('number').and.not.equal(0);",
+							"});",
+							"",
+							"pm.test(\"tags name value exists\", function () {",
+							"    var tags_name = jsonData.tags[0].name;",
+							"    pm.expect(tags_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"status value exists\", function () {",
+							"    var status_value = jsonData.status;",
+							"    pm.expect(status_value).to.not.be.empty;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category\": {\n        \"id\": \"\",\n        \"name\": \"\"\n    },\n    \"name\": \"\",\n    \"photoUrls\": [\n        \"\"\n    ],\n    \"tags\": [\n        {\n            \"id\": \"\",\n            \"name\": \"\"\n        }\n    ],\n    \"status\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create PET field duplicate values validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"duplicate values validation\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"category.id,category.name,name,photoUrls,tags.id,tags.name already exists\");",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category\": {\n        \"id\": \"178\",\n        \"name\": \"gold\"\n    },\n    \"name\": \"Alycia\",\n    \"photoUrls\": [\n        \"http://placeimg.com/640/480/cats\"\n    ],\n    \"tags\": [\n        {\n            \"id\": \"556\",\n            \"name\": \"neural\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unauthorized GET pet details by status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Authorization header should exist on response\", function () {",
+							"    pm.response.to.have.header(\"Authorization\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/findByStatus?status=test",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "test"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/findByStatus?status=available' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by invalid status value",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"display error message using invalid status value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"invalid status value\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/findByStatus?status=test",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "test"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/findByStatus?status=available' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by status = available",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"All status values are 'available'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    jsonData.forEach(function(pet) { ",
+							"        var status = pet.status; ",
+							"        pm.expect(status).to.equal('available');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/findByStatus?status=available",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "available"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/findByStatus?status=available' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by status = pending",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"All status values are 'pending'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    jsonData.forEach(function(pet) { ",
+							"        var status = pet.status; ",
+							"        pm.expect(status).to.equal('pending');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/findByStatus?status=pending",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "pending"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/findByStatus?status=available' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by status = sold",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"All status values are 'sold'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    jsonData.forEach(function(pet) { ",
+							"        var status = pet.status; ",
+							"        pm.expect(status).to.equal('sold');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/findByStatus?status=sold",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "sold"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/findByStatus?status=available' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "Unauthorized get pet details by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Authorization header should exist on response\", function () {",
+							"    pm.response.to.have.header(\"Authorization\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/{{existing_pet_id}}",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"{{existing_pet_id}}"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/9223372036854076739' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by existing id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"pet id value is expected\", function () {",
+							"    var pet_id = jsonData.id",
+							"    pm.expect(pet_id).to.be.a('number')",
+							"    pm.expect(jsonData.id).to.eql(pet_id);",
+							"});",
+							"",
+							"pm.test(\"category id is expected\", function () {",
+							"    var category_id = jsonData.category.id",
+							"    pm.expect(category_id).to.be.a('number')",
+							"    pm.expect(jsonData.category.id).to.eql(category_id);",
+							"});",
+							"",
+							"pm.test(\"category value is expected\", function () {",
+							"    var category_value = jsonData.category.name",
+							"    pm.expect(category_value).to.be.a('string')",
+							"    pm.expect(jsonData.category.name).to.eql(category_value);",
+							"});",
+							"",
+							"pm.test(\"pet name is expected\", function () {",
+							"    var pet_name = jsonData.name",
+							"    pm.expect(pet_name).to.be.a('string')",
+							"    pm.expect(jsonData.name).to.eql(pet_name);",
+							"});",
+							"",
+							"pm.test(\"pet image is expected\", function () {",
+							"    var pet_image_url = jsonData.photoUrls",
+							"    pm.expect(jsonData.photoUrls).to.eql(pet_image_url);",
+							"});",
+							"",
+							"pm.test(\"photoUrls values are valid URLs\", function () {",
+							"    var pet_image_urls = jsonData.photoUrls",
+							"    var regex_url = new RegExp(/^(https?):\\/\\/([^\\s$.?#].[^\\s]*)$/i);",
+							"    pet_image_urls.forEach(function(url) {",
+							"        pm.expect(regex_url.test(url)).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tag id is expected\", function () {",
+							"    var tag_id = jsonData.tags[0].id",
+							"    pm.expect(jsonData.tags[0].id).to.eql(tag_id);",
+							"    pm.expect(tag_id).to.be.a('number')",
+							"});",
+							"",
+							"pm.test(\"status should either be: available, pending, sold\", function () {",
+							"    var status_value = jsonData.status",
+							"    pm.expect(status_value).to.be.a('string')",
+							"    pm.expect(status_value).to.be.oneOf(['available', 'pending','sold']);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var requestOptions = {",
+							"    url: 'https://petstore.swagger.io/v2/pet',",
+							"    method: 'POST',",
+							"    header: {",
+							"        'accept': 'application/json',",
+							"        'Content-Type': 'application/json'",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            id: 0,",
+							"            category: {",
+							"                id: \"515\",",
+							"                name: \"Colin\"",
+							"            },",
+							"            name: \"Meerkat\",",
+							"            photoUrls: [",
+							"                \"http://placeimg.com/640/480/cats\"",
+							"            ],",
+							"            tags: [",
+							"                {",
+							"                    id: 824,",
+							"                    name: \"digital\"",
+							"                }",
+							"            ],",
+							"            status: \"available\"",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(requestOptions, (error, response) => {",
+							"    pm.expect(response).to.have.property('code', 200);",
+							"",
+							"    let responseText = response.text(); ",
+							"    console.log(\"Raw response:\", responseText);",
+							"",
+							"    let idMatch = responseText.match(/\"id\":(\\d+)/);",
+							"    ",
+							"    if (idMatch && idMatch[1]) {",
+							"        let petId = idMatch[1]; // ",
+							"        console.log(\"Extracted Pet ID:\", petId);",
+							"",
+							"        pm.collectionVariables.set(\"pet_to_be_deleted_id\", petId);",
+							"        console.log(\"Saved Pet ID for deletion:\", pm.collectionVariables.get(\"pet_to_be_deleted_id\"));",
+							"    } else {",
+							"        console.log(\"Pet ID not found in the response.\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/{{pet_to_be_deleted_id}}",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"{{pet_to_be_deleted_id}}"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/9223372036854076739' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "GET pet details by non existing id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"display error message using invalid status value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Pet not found\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/225032525323577",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"225032525323577"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'GET' \\\n  'https://petstore.swagger.io/v2/pet/9223372036854076739' \\\n  -H 'accept: application/json'"
+			},
+			"response": []
+		},
+		{
+			"name": "Unauthorized update pet details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Authorization header should exist on response\", function () {",
+							"    pm.response.to.have.header(\"Authorization\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{pet_id_for_put_update}},\n    \"category\": {\n        \"id\": 139,\n        \"name\": \"Dinosaur\"\n    },\n    \"name\": \"Godzilla\",\n    \"photoUrls\": [\n        \"http://placeimg.com/640/480/cats\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 66,\n            \"name\": \"t-rex\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'PUT' \\\n  'https://petstore.swagger.io/v2/pet' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully update pet details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"pet id value is expected\", function () {",
+							"    var pet_id = jsonData.id",
+							"    pm.expect(pet_id).to.be.a('number')",
+							"    pm.expect(jsonData.id).to.eql(pet_id);",
+							"});",
+							"",
+							"pm.test(\"category id is expected\", function () {",
+							"    var category_id = jsonData.category.id",
+							"    pm.expect(category_id).to.be.a('number')",
+							"    pm.expect(jsonData.category.id).to.eql(category_id);",
+							"});",
+							"",
+							"pm.test(\"category value is expected\", function () {",
+							"    var category_value = jsonData.category.name",
+							"    pm.expect(category_value).to.be.a('string')",
+							"    pm.expect(jsonData.category.name).to.eql(category_value);",
+							"});",
+							"",
+							"pm.test(\"pet name is expected\", function () {",
+							"    var pet_name = jsonData.name",
+							"    pm.expect(pet_name).to.be.a('string')",
+							"    pm.expect(jsonData.name).to.eql(pet_name);",
+							"});",
+							"",
+							"pm.test(\"pet image is expected\", function () {",
+							"    var pet_image_url = jsonData.photoUrls",
+							"    pm.expect(jsonData.photoUrls).to.eql(pet_image_url);",
+							"});",
+							"",
+							"pm.test(\"photoUrls values are valid URLs\", function () {",
+							"    var pet_image_urls = jsonData.photoUrls",
+							"    var regex_url = new RegExp(/^(https?):\\/\\/([^\\s$.?#].[^\\s]*)$/i);",
+							"    pet_image_urls.forEach(function(url) {",
+							"        pm.expect(regex_url.test(url)).to.be.true;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tag id is expected\", function () {",
+							"    var tag_id = jsonData.tags[0].id",
+							"    pm.expect(jsonData.tags[0].id).to.eql(tag_id);",
+							"    pm.expect(tag_id).to.be.a('number')",
+							"});",
+							"",
+							"pm.test(\"status should either be: available, pending, sold\", function () {",
+							"    var status_value = jsonData.status",
+							"    pm.expect(status_value).to.be.a('string')",
+							"    pm.expect(status_value).to.be.oneOf(['available', 'pending','sold']);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{pet_id_for_put_update}},\n    \"category\": {\n        \"id\": 139,\n        \"name\": \"Dinosaur\"\n    },\n    \"name\": \"Godzilla\",\n    \"photoUrls\": [\n        \"http://placeimg.com/640/480/cats\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 66,\n            \"name\": \"t-rex\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'PUT' \\\n  'https://petstore.swagger.io/v2/pet' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "update pet details of an non existing pet id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"display error message using invalid status value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Pet not found\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{$timestamp}},\n    \"category\": {\n        \"id\": 139,\n        \"name\": \"Dinosaur\"\n    },\n    \"name\": \"Godzilla\",\n    \"photoUrls\": [\n        \"http://placeimg.com/640/480/cats\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 66,\n            \"name\": \"t-rex\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'PUT' \\\n  'https://petstore.swagger.io/v2/pet' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "update pet details with missing values",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"category id value exists\", function () {",
+							"    var category_id = jsonData.category.id;",
+							"    pm.expect(category_id).to.be.a('number').and.not.equal(0);",
+							"});",
+							"",
+							"pm.test(\"category name value exists\", function () {",
+							"    var category_name = jsonData.category.name;",
+							"    pm.expect(category_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"pet name value exists\", function () {",
+							"    var pet_name = jsonData.name;",
+							"    pm.expect(pet_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"photoUrls value exists\", function () {",
+							"    var pet_image_url = jsonData.photoUrls;",
+							"    pm.expect(pet_image_url).to.be.an('array').that.is.not.empty;",
+							"    ",
+							"    pet_image_url.forEach(function(url) {",
+							"        pm.expect(url).to.not.be.empty; // no empty strings in photoUrls",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"tags id value exists\", function () {",
+							"    var tags_id = jsonData.tags[0].id;",
+							"    pm.expect(tags_id).to.be.a('number').and.not.equal(0);",
+							"});",
+							"",
+							"pm.test(\"tags name value exists\", function () {",
+							"    var tags_name = jsonData.tags[0].name;",
+							"    pm.expect(tags_name).to.not.be.empty;",
+							"});",
+							"",
+							"pm.test(\"status value exists\", function () {",
+							"    var status_value = jsonData.status;",
+							"    pm.expect(status_value).to.not.be.empty;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{pet_id_for_put_update}},\n    \"category\": {\n        \"id\": \"\",\n        \"name\": \"\"\n    },\n    \"name\": \"\",\n    \"photoUrls\": [\n        \"\"\n    ],\n    \"tags\": [\n        {\n            \"id\": \"\",\n            \"name\": \"\"\n        }\n    ],\n    \"status\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'PUT' \\\n  'https://petstore.swagger.io/v2/pet' \\\n  -H 'accept: application/json' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete pet data by non existing pet id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code should be 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "api_key",
+						"value": "124124124"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/9223372036854077949",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"9223372036854077949"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'DELETE' \\\n  'https://petstore.swagger.io/v2/pet/9223372036854077949' \\\n  -H 'accept: application/json' \\\n  -H 'api_key: 124124124'"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete pet data by non existing pet id Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"status code should be 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"verify pet id value in message\", function () {",
+							"    var pet_to_be_deleted_id = jsonData.message",
+							"    pm.expect(pet_to_be_deleted_id).to.eql(jsonData.message);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var requestOptions = {",
+							"    url: 'https://petstore.swagger.io/v2/pet',",
+							"    method: 'POST',",
+							"    header: {",
+							"        'accept': 'application/json',",
+							"        'Content-Type': 'application/json'",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            id: 0,",
+							"            category: {",
+							"                id: \"515\",",
+							"                name: \"Colin\"",
+							"            },",
+							"            name: \"Meerkat\",",
+							"            photoUrls: [",
+							"                \"http://placeimg.com/640/480/cats\"",
+							"            ],",
+							"            tags: [",
+							"                {",
+							"                    id: 824,",
+							"                    name: \"digital\"",
+							"                }",
+							"            ],",
+							"            status: \"available\"",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(requestOptions, (error, response) => {",
+							"    pm.expect(response).to.have.property('code', 200);",
+							"",
+							"    let responseText = response.text(); ",
+							"    console.log(\"Raw response:\", responseText);",
+							"",
+							"    let idMatch = responseText.match(/\"id\":(\\d+)/);",
+							"    ",
+							"    if (idMatch && idMatch[1]) {",
+							"        let petId = idMatch[1]; // ",
+							"        console.log(\"Extracted Pet ID:\", petId);",
+							"",
+							"        pm.collectionVariables.set(\"pet_to_be_deleted_id\", petId);",
+							"        console.log(\"Saved Pet ID for deletion:\", pm.collectionVariables.get(\"pet_to_be_deleted_id\"));",
+							"    } else {",
+							"        console.log(\"Pet ID not found in the response.\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "https://{{pet_circle_test_url}}/v2/pet/{{pet_to_be_deleted_id}}",
+					"protocol": "https",
+					"host": [
+						"{{pet_circle_test_url}}"
+					],
+					"path": [
+						"v2",
+						"pet",
+						"{{pet_to_be_deleted_id}}"
+					]
+				},
+				"description": "Generated from cURL: curl -X 'DELETE' \\\n  'https://petstore.swagger.io/v2/pet/9223372036854077949' \\\n  -H 'accept: application/json' \\\n  -H 'api_key: 124124124'"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "pet_to_be_deleted_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
