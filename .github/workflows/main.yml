@@ -3,30 +3,22 @@ on:
   workflow_dispatch:
 jobs:
   test-api:
-    runs-on: workflow_dispatch
+    runs-on: ubuntu-latest  # Specify a valid runner environment here
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-
-      # Install Node on the runner
       - name: Install Node
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
 
-
-      # Install the newman command line utility and also install the html extra reporter
       - name: Install newman
         run: |
           npm install -g newman
 
-      # Make directory to upload the test results
       - name: Make Directory for results
         run: mkdir -p testResults
 
-
-      # Run the POSTMAN collection in newman cli
       - name: Run Pet Circle collection in newman
         run: |
           newman run pet_circle.postman_collection.json -e pet_circle.postman_environment.json --delay-request 500 --verbose
