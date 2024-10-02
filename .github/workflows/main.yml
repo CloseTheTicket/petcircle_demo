@@ -1,4 +1,4 @@
-name: Run_Collection
+name: newman_api_test_runner
 on:
   workflow_dispatch:
 jobs:
