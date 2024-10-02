@@ -15,7 +15,7 @@ Note: Another alternative would be to import Postman collection (.json) files an
 
 
 ## Step 3: Select the imported environment before running the API tests 
-3. To use the new environment, select it from the environment selector at the top right of the workbench. This makes it the active environment and sets all variables to the values specified in the environment.
+3. To use the new environment, select environment named `pet_circle` from the environment selector at the top right of the workbench. This makes it the active environment and sets all variables to the values specified in the environment.
 
 ![alt text](environment-selector-v11-14.jpg)
 
