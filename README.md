@@ -30,3 +30,8 @@ Note: Another alternative would be to import Postman collection (.json) files an
 2. Click on the available runner with the runner name (newman_api_test_runner)
 3. Click on the `Run workflow` button on the rightmost part of the page
 4. On the displayed popup click `Run workflow` button in green background color
+
+
+Related links:
+https://petstore.swagger.io/#/
+https://learning.postman.com/docs/introduction/overview/
