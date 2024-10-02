@@ -17,7 +17,7 @@ Note: Another alternative would be to import Postman collection (.json) files an
 ## Step 3: Select the imported environment before running the API tests 
 3. To use the new environment, select environment named `pet_circle` from the environment selector at the top right of the workbench. This makes it the active environment and sets all variables to the values specified in the environment.
 
-![alt text](environment-selector-v11-14.jpg)
+<img width="387" alt="image" src="https://github.com/user-attachments/assets/0e367d9f-1cc5-4823-b1c5-4417d64a2225">
 
 ## Step 4: Run API collections via Postman runner
 4. Select the postman collection to be executed manually - https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/#configure-a-collection-run
